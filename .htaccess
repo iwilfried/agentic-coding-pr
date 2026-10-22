@@ -1,0 +1,19 @@
+# Agentic Coding PR · Apache-Konfiguration (z. B. für Strato)
+# Wird von GitHub Pages ignoriert, nur für eigenes Hosting nötig.
+
+# Richtiger Dateityp für das PWA-Manifest
+AddType application/manifest+json .webmanifest
+
+# Immer HTTPS verwenden (Service Worker laufen nur über HTTPS)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# sw.js nie lange cachen, damit neue Versionen schnell ankommen
+<IfModule mod_headers.c>
+  <Files "sw.js">
+    Header set Cache-Control "no-cache"
+  </Files>
+</IfModule>

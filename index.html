@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="description" content="Agentic Coding in Presse und Öffentlichkeitsarbeit – Mini-Lesson mit Quiz. Offline-fähig. Learning Factory." />
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#f8f5ee" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0a1628" media="(prefers-color-scheme: dark)" />
+
+<!-- iOS-spezifisch -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Agentic PR" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+
+<title>Agentic Coding in der PR · Mini-Lesson</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink: #0a1628;
+    --paper: #f8f5ee;
+    --accent: #c8a96a;
+    --accent-deep: #9c7f3f;
+    --bg: var(--paper);
+    --surface: #fffdf8;
+    --surface-2: #efe8d8;
+    --text: var(--ink);
+    --muted: #5a6470;
+    --rule: rgba(22, 36, 71, .14);
+    --ok: #15803d;   --ok-bg: #e7f4ea;
+    --bad: #b91c1c;  --bad-bg: #fbeaea;
+    --tip-bg: #fbf3df;
+    --code-bg: #efe8d8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a1628;
+      --surface: #13223b;
+      --surface-2: #1c2d4a;
+      --text: #ece6d8;
+      --muted: #9aa4b2;
+      --rule: rgba(236, 230, 216, .14);
+      --ok: #4ade80;   --ok-bg: rgba(74, 222, 128, .12);
+      --bad: #f87171;  --bad-bg: rgba(248, 113, 113, .12);
+      --tip-bg: rgba(200, 169, 106, .14);
+      --code-bg: #1c2d4a;
+    }
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font: 16px/1.55 "Manrope", system-ui, sans-serif;
+    min-height: 100dvh;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+  }
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; line-height: 1.2; margin: 0; }
+  code, pre { font-family: "JetBrains Mono", Consolas, monospace; font-size: .86em; }
+  code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  pre { background: var(--code-bg); padding: 10px 12px; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+
+  .app { max-width: 560px; margin: 0 auto; padding: 0 16px calc(84px + env(safe-area-inset-bottom)); }
+
+  /* Kopf */
+  header { padding: 22px 0 14px; }
+  .kicker { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-deep); font-weight: 700; }
+  @media (prefers-color-scheme: dark) { .kicker { color: var(--accent); } }
+  header h1 { font-size: 1.9rem; margin-top: 4px; }
+  header p { margin: 6px 0 0; color: var(--muted); }
+
+  /* Fortschritt gesamt */
+  .gesamt { background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 14px 16px; margin: 6px 0 18px; }
+  .gesamt-zeile { display: flex; justify-content: space-between; font-size: .9rem; color: var(--muted); margin-bottom: 8px; }
+  .balken { height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+  .balken > i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s; }
+
+  /* Lektionsliste */
+  .liste { display: grid; gap: 10px; }
+  .karte {
+    display: flex; align-items: center; gap: 14px; width: 100%; text-align: left;
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 14px 16px; min-height: 64px;
+  }
+  .karte:active { transform: scale(.99); }
+  .karte .ico { font-size: 1.6rem; width: 40px; text-align: center; flex: none; }
+  .karte .txt { flex: 1; }
+  .karte .txt b { display: block; }
+  .karte .txt span { font-size: .85rem; color: var(--muted); }
+  .karte .status { font-size: 1.2rem; flex: none; }
+  .karte.final { border: 2px solid var(--accent); }
+
+  .install { margin: 18px 0 0; width: 100%; padding: 12px; border-radius: 12px; border: 1px dashed var(--accent); background: transparent; font-weight: 600; }
+  .hinweis-ios { font-size: .82rem; color: var(--muted); text-align: center; margin-top: 18px; }
+
+  /* Lektion */
+  .lektion-kopf { display: flex; align-items: center; gap: 10px; padding: 16px 0 10px; position: sticky; top: 0; background: var(--bg); z-index: 2; }
+  .zurueck { border: 1px solid var(--rule); background: var(--surface); border-radius: 10px; width: 44px; height: 44px; font-size: 1.2rem; flex: none; }
+  .lektion-kopf .balken { flex: 1; }
+  .schritt-nr { font-size: .8rem; color: var(--muted); flex: none; min-width: 34px; text-align: right; }
+
+  .schritt { background: var(--surface); border: 1px solid var(--rule); border-radius: 16px; padding: 20px 18px; margin-top: 6px; animation: rein .25s ease; }
+  @keyframes rein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .schritt h2 { font-size: 1.35rem; margin-bottom: 12px; }
+  .schritt p { margin: 0 0 12px; }
+  .schritt ul, .schritt ol { padding-left: 22px; margin: 0 0 12px; }
+  .schritt li { margin: 4px 0; }
+  .schritt table { width: 100%; border-collapse: collapse; font-size: .9rem; margin-bottom: 12px; }
+  .schritt td, .schritt th { border-bottom: 1px solid var(--rule); padding: 7px 6px; text-align: left; vertical-align: top; }
+  .schritt th { font-size: .8rem; color: var(--muted); }
+  .merke { background: var(--tip-bg); border-left: 4px solid var(--accent); padding: 10px 12px; border-radius: 8px; margin: 10px 0 4px; }
+  .good, .bad { padding: 10px 12px; border-radius: 8px; margin: 0 0 10px; }
+  .good { background: var(--ok-bg); border-left: 4px solid var(--ok); }
+  .bad { background: var(--bad-bg); border-left: 4px solid var(--bad); }
+  .muted { color: var(--muted); font-size: .9rem; }
+  .center { text-align: center; }
+  .loop { display: grid; gap: 8px; }
+  .loop div { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+  .loop b { display: block; font-family: "Fraunces", serif; }
+  .badge { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: 6px; }
+  @media (prefers-color-scheme: dark) { .badge { color: var(--accent); } }
+
+  /* Quiz */
+  .optionen { display: grid; gap: 10px; margin-top: 6px; }
+  .option {
+    text-align: left; background: var(--bg); border: 1.5px solid var(--rule); border-radius: 12px;
+    padding: 12px 14px; min-height: 48px;
+  }
+  .option.richtig { border-color: var(--ok); background: var(--ok-bg); }
+  .option.falsch  { border-color: var(--bad); background: var(--bad-bg); }
+  .option:disabled { cursor: default; }
+  .erklaerung { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: var(--tip-bg); font-size: .95rem; }
+
+  /* Navigation unten */
+  .aktion {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 3;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--bg) 70%, transparent);
+  }
+  .aktion .innen { max-width: 560px; margin: 0 auto; display: flex; gap: 10px; }
+  .btn { flex: 1; min-height: 50px; border-radius: 12px; border: 0; font-weight: 700; background: var(--ink); color: var(--paper); }
+  @media (prefers-color-scheme: dark) { .btn { background: var(--accent); color: var(--ink); } }
+  .btn:disabled { opacity: .35; }
+  .btn.zweit { flex: none; width: 54px; background: var(--surface); color: var(--text); border: 1px solid var(--rule); }
+
+  /* Tabs */
+  .tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 3; background: var(--surface); border-top: 1px solid var(--rule);
+          padding-bottom: env(safe-area-inset-bottom); }
+  .tabs .innen { max-width: 560px; margin: 0 auto; display: flex; }
+  .tab { flex: 1; border: 0; background: none; padding: 10px 0 12px; font-size: .78rem; font-weight: 600; color: var(--muted); }
+  .tab span { display: block; font-size: 1.3rem; }
+  .tab.aktiv { color: var(--text); }
+
+  /* Spickzettel */
+  .spick { display: grid; gap: 8px; }
+  .spick div { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 10px 14px; }
+  .spick code { font-size: .95rem; }
+  .spick span { display: block; color: var(--muted); font-size: .9rem; margin-top: 2px; }
+
+  /* Ergebnis */
+  .ergebnis { text-align: center; padding: 26px 18px; }
+  .ergebnis .zahl { font-family: "Fraunces", serif; font-size: 3.2rem; font-weight: 700; }
+  .ergebnis .feedback { font-size: 1.05rem; margin: 10px 0 0; }
+  .fehlerliste { text-align: left; margin-top: 18px; }
+  .fehlerliste h3 { font-size: 1rem; margin-bottom: 6px; }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<nav class="tabs" id="tabs">
+  <div class="innen">
+    <button class="tab aktiv" data-tab="home"><span>📚</span>Lernen</button>
+    <button class="tab" data-tab="spick"><span>🧾</span>Spickzettel</button>
+  </div>
+</nav>
+
+<div class="aktion" id="aktion" hidden>
+  <div class="innen">
+    <button class="btn zweit" id="btnZurueck" aria-label="Zurück">←</button>
+    <button class="btn" id="btnWeiter">Weiter</button>
+  </div>
+</div>
+
+<script src="lesson.js"></script>
+<script>
+  // ---------- Fortschritt (localStorage, robust gegen Private-Modus) ----------
+  const SPEICHER = "agentic-pr-v1";
+  function ladeStand() {
+    try { return JSON.parse(localStorage.getItem(SPEICHER)) || { fertig: [], bestwert: null }; }
+    catch { return { fertig: [], bestwert: null }; }
+  }
+  function speichereStand() {
+    try { localStorage.setItem(SPEICHER, JSON.stringify(stand)); } catch {}
+  }
+  let stand = ladeStand();
+
+  // ---------- Bewertung des Abschlussquiz ----------
+  // richtig: Anzahl richtiger Antworten, gesamt: Anzahl Fragen.
+  // Gibt einen kurzen Rückmeldetext für die Ergebnis-Seite zurück.
+  // Stufen in Prozent, damit sie auch bei mehr oder weniger Fragen stimmen.
+  function feedbackText(richtig, gesamt) {
+    const anteil = gesamt ? richtig / gesamt : 0;
+
+    if (anteil === 1)    return "🏆 Perfekt! Du bist bereit für die Praxis. Probier jetzt die Aufgabe in Lektion 7 aus.";
+    if (anteil >= 0.75)  return "💪 Sehr gut! Schau dir unten die offenen Punkte noch einmal an, dann sitzt alles.";
+    if (anteil >= 0.5)   return "👍 Solide Basis. Wiederhole die Fragen unten und mach das Quiz danach noch einmal.";
+    return "🔁 Noch nicht ganz. Geh die Lektionen in Ruhe noch einmal durch und versuch es dann erneut. Jeder Durchgang zählt.";
+  }
+
+  // ---------- Hilfen ----------
+  const $app = document.getElementById("app");
+  const $aktion = document.getElementById("aktion");
+  const $tabs = document.getElementById("tabs");
+  const $weiter = document.getElementById("btnWeiter");
+  const $zurueck = document.getElementById("btnZurueck");
+  const el = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+
+  function modus(lernmodus) {
+    $aktion.hidden = !lernmodus;
+    $tabs.hidden = lernmodus;
+    window.scrollTo(0, 0);
+  }
+
+  // ---------- Startseite ----------
+  let installEvent = null;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvent = e; if (aktuellerTab === "home") zeigeHome(); });
+
+  let aktuellerTab = "home";
+  function zeigeHome() {
+    aktuellerTab = "home";
+    modus(false);
+    const n = LESSON.lessons.length;
+    const fertig = LESSON.lessons.filter(l => stand.fertig.includes(l.id)).length;
+    const best = stand.bestwert ? `${stand.bestwert} / ${LESSON.finalQuiz.length}` : "noch offen";
+
+    $app.innerHTML = `
+      <header>
+        <div class="kicker">Learning Factory · Mini-Lesson</div>
+        <h1>${LESSON.title}</h1>
+        <p>${LESSON.subtitle}</p>
+      </header>
+      <div class="gesamt">
+        <div class="gesamt-zeile"><span>${fertig} von ${n} Lektionen</span><span>Quiz: ${best}</span></div>
+        <div class="balken"><i style="width:${(fertig / n) * 100}%"></i></div>
+      </div>
+      <div class="liste" id="liste"></div>
+      ${installEvent ? `<button class="install" id="install">📲 Als App installieren</button>` : ""}
+      <p class="hinweis-ios">iPhone: Teilen-Symbol → „Zum Home-Bildschirm“</p>`;
+
+    const $liste = document.getElementById("liste");
+    LESSON.lessons.forEach((l, i) => {
+      const ok = stand.fertig.includes(l.id);
+      const k = el(`<button class="karte">
+          <span class="ico">${l.icon}</span>
+          <span class="txt"><b>${i + 1}. ${l.title}</b><span>${l.minutes} Min · ${l.steps.length} Schritte</span></span>
+          <span class="status">${ok ? "✅" : "›"}</span>
+        </button>`);
+      k.onclick = () => starteLektion(l);
+      $liste.appendChild(k);
+    });
+    const q = el(`<button class="karte final">
+        <span class="ico">🏁</span>
+        <span class="txt"><b>Abschlussquiz</b><span>${LESSON.finalQuiz.length} Fragen · alle Themen</span></span>
+        <span class="status">›</span>
+      </button>`);
+    q.onclick = starteQuiz;
+    $liste.appendChild(q);
+
+    const $inst = document.getElementById("install");
+    if ($inst) $inst.onclick = async () => { installEvent.prompt(); await installEvent.userChoice; installEvent = null; zeigeHome(); };
+  }
+
+  function zeigeSpick() {
+    aktuellerTab = "spick";
+    modus(false);
+    $app.innerHTML = `
+      <header><div class="kicker">Nachschlagen</div><h1>${LESSON.cheatsheetTitle || "Spickzettel"}</h1>
+      <p>${LESSON.cheatsheetIntro || ""}</p></header>
+      <div class="spick">${LESSON.cheatsheet.map(([c, d]) => `<div><code>${c}</code><span>${d}</span></div>`).join("")}</div>`;
+  }
+
+  // ---------- Schritt-Ansicht (für Lektionen und Quiz gemeinsam) ----------
+  // ablauf = { titel, schritte, beimEnde(), istQuiz }
+  let ablauf = null, pos = 0, beantwortet = {};
+
+  function starteLektion(l) {
+    ablauf = { titel: l.title, schritte: l.steps, istQuiz: false,
+      beimEnde() { if (!stand.fertig.includes(l.id)) stand.fertig.push(l.id); speichereStand(); zeigeHome(); } };
+    pos = 0; beantwortet = {};
+    modus(true); zeigeSchritt();
+  }
+
+  function starteQuiz() {
+    ablauf = { titel: "Abschlussquiz", schritte: LESSON.finalQuiz.map(f => ({ type: "quiz", ...f })), istQuiz: true,
+      beimEnde: zeigeErgebnis };
+    pos = 0; beantwortet = {};
+    modus(true); zeigeSchritt();
+  }
+
+  function zeigeSchritt() {
+    const s = ablauf.schritte[pos];
+    const n = ablauf.schritte.length;
+    $app.innerHTML = `
+      <div class="lektion-kopf">
+        <button class="zurueck" id="schliessen" aria-label="Schließen">✕</button>
+        <div class="balken"><i style="width:${((pos + 1) / n) * 100}%"></i></div>
+        <span class="schritt-nr">${pos + 1}/${n}</span>
+      </div>`;
+    document.getElementById("schliessen").onclick = zeigeHome;
+
+    let karte;
+    if (s.type === "quiz") {
+      karte = el(`<section class="schritt">
+          <span class="badge">${ablauf.istQuiz ? "Frage " + (pos + 1) : "Kurz-Check"}</span>
+          <h2>${s.q}</h2>
+          <div class="optionen"></div>
+          <div class="erklaerung" hidden></div>
+        </section>`);
+      const $opt = karte.querySelector(".optionen");
+      const $erk = karte.querySelector(".erklaerung");
+      const zeigeAuswertung = (gewaehlt) => {
+        [...$opt.children].forEach((b, i) => {
+          b.disabled = true;
+          if (i === s.correct) b.classList.add("richtig");
+          else if (i === gewaehlt) b.classList.add("falsch");
+        });
+        $erk.innerHTML = (gewaehlt === s.correct ? "✅ <b>Richtig.</b> " : "❌ <b>Nicht ganz.</b> ") + s.explain;
+        $erk.hidden = false;
+        $weiter.disabled = false;
+      };
+      s.options.forEach((o, i) => {
+        const b = el(`<button class="option">${o}</button>`);
+        b.onclick = () => { beantwortet[pos] = i; zeigeAuswertung(i); };
+        $opt.appendChild(b);
+      });
+      if (pos in beantwortet) zeigeAuswertung(beantwortet[pos]);
+      $weiter.disabled = !(pos in beantwortet);
+    } else {
+      karte = el(`<section class="schritt">
+          ${s.type === "task" ? `<span class="badge">Praxis</span>` : ""}
+          <h2>${s.title}</h2>${s.html}
+        </section>`);
+      $weiter.disabled = false;
+    }
+    $app.appendChild(karte);
+
+    $weiter.textContent = pos === n - 1 ? (ablauf.istQuiz ? "Auswerten" : "Lektion abschließen") : "Weiter";
+    $zurueck.disabled = pos === 0;
+    window.scrollTo(0, 0);
+  }
+
+  $weiter.onclick = () => {
+    if (pos < ablauf.schritte.length - 1) { pos++; zeigeSchritt(); }
+    else ablauf.beimEnde();
+  };
+  $zurueck.onclick = () => { if (pos > 0) { pos--; zeigeSchritt(); } };
+
+  // ---------- Ergebnis ----------
+  function zeigeErgebnis() {
+    const fragen = ablauf.schritte;
+    const richtig = fragen.filter((f, i) => beantwortet[i] === f.correct).length;
+    stand.bestwert = Math.max(stand.bestwert || 0, richtig);
+    speichereStand();
+
+    const falsche = fragen.filter((f, i) => beantwortet[i] !== f.correct);
+    modus(false);
+    $tabs.hidden = true;
+    $app.innerHTML = `
+      <section class="schritt ergebnis">
+        <span class="badge">Dein Ergebnis</span>
+        <div class="zahl">${richtig} / ${fragen.length}</div>
+        <p class="feedback">${feedbackText(richtig, fragen.length)}</p>
+        ${falsche.length ? `<div class="fehlerliste"><h3>Zum Wiederholen</h3>
+          ${falsche.map(f => `<div class="good" style="margin-bottom:8px"><b>${f.q}</b><br>${f.options[f.correct]}</div>`).join("")}</div>` : ""}
+      </section>
+      <div class="optionen" style="margin-top:14px">
+        <button class="btn" id="nochmal">Quiz wiederholen</button>
+        <button class="option" id="start" style="text-align:center">Zur Übersicht</button>
+      </div>`;
+    document.getElementById("nochmal").onclick = starteQuiz;
+    document.getElementById("start").onclick = () => { $tabs.hidden = false; zeigeHome(); };
+  }
+
+  // ---------- Tabs ----------
+  document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("aktiv", x === t));
+    t.dataset.tab === "spick" ? zeigeSpick() : zeigeHome();
+  });
+
+  zeigeHome();
+
+  // ---------- Service Worker (nur über HTTPS oder localhost) ----------
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  }
+</script>
+</body>
+</html>
